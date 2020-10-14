@@ -1,0 +1,20 @@
+{% set title = "Main" %}
+{% set route = "home" %}
+
+{% extends "layouts/_layout.html" %}
+{% import "data/data.html" as items %}
+
+{% block content %}
+
+  
+  <div class="container">
+<h1>by emotion</h1>
+<div class="cols">
+  <img class="img-1 js-gl-img" src="https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80" alt="">
+  <img class="img-2 js-gl-img" src="https://images.unsplash.com/photo-1602571816391-59607c7a8a4d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80" alt="">
+  <img class="img-3 js-gl-img" src="https://images.unsplash.com/photo-1602506860736-c4511f592bed?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80" alt="">
+</div>
+
+  </div>
+  <div id="gl"></div>
+{% endblock %}

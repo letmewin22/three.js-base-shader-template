@@ -1,0 +1,47 @@
+* {
+  &::selection {
+    color: white;
+    background: $accent;
+  }
+}
+
+body {
+  @include reg;
+  color: $black;
+  line-height: 1.5em;
+  font-size: size(20, 16);
+  // height: 100vh;
+  // overflow: hidden;
+  padding-top: 100px;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 0.5fr 1fr 0.5fr;
+  grid-template-rows: 0.5fr 1fr;
+  grid-row-gap: 20vh;
+  margin-top: 100px;
+}
+
+.img-1 {
+  grid-column-start: 1;
+  grid-column-end: 3;
+}
+
+.img-2 {
+  grid-column-start: 2;
+  grid-column-end: 3;
+}
+
+.img-3 {
+  grid-column-start: 3;
+  grid-column-end: 3;
+  margin-top: 150px;
+}
+
+#gl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
