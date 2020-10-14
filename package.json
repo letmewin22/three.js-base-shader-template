@@ -67,7 +67,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.10.1",
     "gsap": "^3.3.4",
-    "simple-input-events": "^2.0.0",
     "three": "^0.119.1"
   }
 }

@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-// import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
+import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import {watchViewport} from '@/libs/tornis'
 
 import Figure from './Figure'
@@ -14,6 +14,8 @@ export default class Scene {
       w: window.innerWidth,
       h: window.innerHeight
     }
+
+    this.time = 0
 
     this.figures = []
 
@@ -39,8 +41,8 @@ export default class Scene {
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setClearColor(0xd3d3d3, 0)
 
-    // this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-    // this.controls.enableZoom = false
+    this.controls = new OrbitControls(this.camera, this.renderer.domElement)
+    this.controls.enableZoom = false
 
     this.$container.appendChild(this.renderer.domElement)
 
@@ -58,7 +60,6 @@ export default class Scene {
     this.perspective = 800
     this.formula = 2 * Math.atan(this.sizes.h / 2 / this.perspective)
     this.fov = (180 * this.formula) / Math.PI
-
     this.camera = new THREE.PerspectiveCamera(
       this.fov,
       this.sizes.w / this.sizes.h,
@@ -68,7 +69,9 @@ export default class Scene {
 
     this.camera.position.set(0, 0, this.perspective)
 
-    this.camera.lookAt(this.scene.position)
+    // this.camera.lookAt(this.scene.position)
+    this.camera.lookAt(0, 0, 0)
+
   }
 
 
@@ -90,7 +93,6 @@ export default class Scene {
       requestAnimationFrame(this.animateRAF)
       this.time++
       this.figures.forEach(figure => {
-        // figure.scrollAnimate({value: scroll.velocity.y})
         figure.update()
       })
       this.renderer.render(this.scene, this.camera)
@@ -101,7 +103,8 @@ export default class Scene {
   updateValues({scroll}) {
     if (scroll.changed) {
       this.figures.forEach(figure => {
-        // figure.scrollAnimate({value: scroll.velocity.y})
+        // figure.scroll({value: scroll.velocity.y})
+        // figure.updatePos(scroll.top)
         figure.resize()
       })
     }

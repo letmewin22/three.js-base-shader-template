@@ -3,8 +3,6 @@ import gsap from 'gsap'
 
 import vertex from './shader/vertex.glsl'
 import fragment from './shader/fragment.glsl'
-const createInputEvents = require('simple-input-events')
-const event = createInputEvents(window)
 
 export default class Figure {
 
@@ -14,11 +12,18 @@ export default class Figure {
 
     this.speed = 0
     this.targetSpeed = 0
+    this.time = 0
     this.mouse = new THREE.Vector2()
     this.followMouse = new THREE.Vector2()
     this.prevMouse = new THREE.Vector2()
 
-    this.mouseMove()
+    this.mouseMove = this.mouseMove.bind(this)
+    this.mouseEnter = this.mouseEnter.bind(this)
+    this.mouseLeave = this.mouseLeave.bind(this)
+
+    this.$img.addEventListener('mousemove', this.mouseMove)
+    this.$img.addEventListener('mouseenter', this.mouseEnter)
+    this.$img.addEventListener('mouseleave', this.mouseLeave)
 
     this.loader = new THREE.TextureLoader()
     this.createMesh()
@@ -33,18 +38,23 @@ export default class Figure {
     this.offset = new THREE.Vector2(0, 0)
 
 
-    this.geometry = new THREE.PlaneBufferGeometry(1, 1, 1, 1)
+    this.geometry = new THREE.PlaneBufferGeometry(1, 1, 80, 80)
 
     const uniforms = {
       uTexture: {type: 't', value: this.image},
       uResolution: {
-        value: new THREE.Vector2(1, window.innerHeight/window.innerWidth),
+        value: new THREE.Vector2(window.innerWidth, window.innerHeight),
       },
       uMouse: {value: new THREE.Vector2(-10, -10)},
       uVelo: {value: 0},
+      uTime: {value: 0},
+      uState: {value: 0}
     }
 
     this.material = new THREE.ShaderMaterial({
+      extensions: {
+        derivatives: '#extension GL_OES_standard_derivatives : enable'
+      },
       uniforms,
       vertexShader: vertex,
       fragmentShader: fragment,
@@ -57,23 +67,14 @@ export default class Figure {
     this.getSizes()
 
     this.mesh.position.set(this.offset.x, this.offset.y, 0)
-    this.mesh.scale.set(this.sizes.x, this.sizes.y, 1)
+    this.mesh.scale.set(this.sizes.x, this.sizes.y, this.sizes.x / 2)
     this.scene.add(this.mesh)
+
   }
 
   getSizes() {
 
     const {width, height, top, left} = this.$img.getBoundingClientRect()
-
-    // image cover
-    // const imageAspect = this.$img.naturalHeight / this.$img.naturalWidth
-
-    // if (height / width < imageAspect) {
-    //   height = width / imageAspect
-
-    // } else {
-    //   width = height * imageAspect
-    // }
 
     this.sizes.set(width, height)
     this.offset.set(
@@ -83,8 +84,10 @@ export default class Figure {
   }
 
   update() {
+    this.time++
     this.getSpeed()
     this.mesh.material.uniforms.uMouse.value = this.followMouse
+    this.mesh.material.uniforms.uTime.value = this.time
     this.mesh.material.uniforms.uVelo.value = Math.min(this.targetSpeed, 0.05)
     this.targetSpeed *=0.999
   }
@@ -93,16 +96,37 @@ export default class Figure {
     this.getSizes()
 
     this.mesh.position.set(this.offset.x, this.offset.y, 0)
-    this.mesh.scale.set(this.sizes.x, this.sizes.y, 1)
-    this.mesh.material.uniforms.uResolution.value.y =
-    window.innerHeight / window.innerWidth
+    this.mesh.scale.set(this.sizes.x, this.sizes.y, this.sizes.x / 2)
+    this.mesh.material.uniforms.uResolution.value.x = window.innerWidth
+    this.mesh.material.uniforms.uResolution.value.y = window.innerHeight
   }
 
-  mouseMove() {
-    event.on('move', ({position}) => {
-      // mousemove / touchmove
-      this.mouse.x = position[0] / window.innerWidth
-      this.mouse.y = 1.0 - position[1] / window.innerHeight
+  mouseMove(e) {
+    this.mouse.x = 1.0 - e.offsetX / (this.sizes.x - this.sizes.x / 2)
+    this.mouse.y = 1.0 - e.offsetY / (this.sizes.y - this.sizes.y / 2)
+
+  }
+
+  mouseEnter() {
+    gsap.to(this.mesh.material.uniforms.uState, {
+      duration: 0.5,
+      value: 1
+    })
+  }
+
+  mouseLeave() {
+    this.mesh.material.uniforms.uMouse.value = {y: 0, x: 0}
+    this.mesh.material.uniforms.uVelo.value = 0
+    gsap.to(this.mesh.material.uniforms.uState, {
+      duration: 0.5,
+      value: 0
+    })
+  }
+
+  scroll(velocity) {
+    gsap.to(this.mesh.material.uniforms.uState, {
+      duration: 0.5,
+      value: velocity.value / 10
     })
   }
 
@@ -118,12 +142,5 @@ export default class Figure {
 
     this.prevMouse.x = this.mouse.x
     this.prevMouse.y = this.mouse.y
-  }
-
-  scrollAnimate({value}) {
-    gsap.to(this.mesh.material.uniforms.uDistortion, {
-      value: value / 20,
-      duration: 0.5,
-    })
   }
 }
