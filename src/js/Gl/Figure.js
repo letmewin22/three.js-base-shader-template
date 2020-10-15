@@ -17,11 +17,11 @@ export default class Figure {
     this.followMouse = new THREE.Vector2()
     this.prevMouse = new THREE.Vector2()
 
-    this.mouseMove = this.mouseMove.bind(this)
+    // this.mouseMove = this.mouseMove.bind(this)
     this.mouseEnter = this.mouseEnter.bind(this)
     this.mouseLeave = this.mouseLeave.bind(this)
 
-    this.$img.addEventListener('mousemove', this.mouseMove)
+    // this.$img.addEventListener('mousemove', this.mouseMove)
     this.$img.addEventListener('mouseenter', this.mouseEnter)
     this.$img.addEventListener('mouseleave', this.mouseLeave)
 
@@ -42,13 +42,9 @@ export default class Figure {
 
     const uniforms = {
       uTexture: {type: 't', value: this.image},
-      uResolution: {
-        value: new THREE.Vector2(window.innerWidth, window.innerHeight),
-      },
-      uMouse: {value: new THREE.Vector2(-10, -10)},
-      uVelo: {value: 0},
       uTime: {value: 0},
-      uState: {value: 0}
+      uState: {value: 0},
+      uDistortion: {value: 0}
     }
 
     this.material = new THREE.ShaderMaterial({
@@ -86,9 +82,10 @@ export default class Figure {
   update() {
     this.time++
     this.getSpeed()
-    this.mesh.material.uniforms.uMouse.value = this.followMouse
-    this.mesh.material.uniforms.uTime.value = this.time
-    this.mesh.material.uniforms.uVelo.value = Math.min(this.targetSpeed, 0.05)
+    const m = this.mesh.material.uniforms
+    // m.uMouse.value = this.followMouse
+    m.uTime.value = this.time
+    // m.uVelo.value = Math.min(this.targetSpeed, 0.05)
     this.targetSpeed *=0.999
   }
 
@@ -97,8 +94,9 @@ export default class Figure {
 
     this.mesh.position.set(this.offset.x, this.offset.y, 0)
     this.mesh.scale.set(this.sizes.x, this.sizes.y, this.sizes.x / 2)
-    this.mesh.material.uniforms.uResolution.value.x = window.innerWidth
-    this.mesh.material.uniforms.uResolution.value.y = window.innerHeight
+    // const m = this.mesh.material.uniforms
+    // m.uResolution.value.x = window.innerWidth
+    // m.uResolution.value.y = window.innerHeight
   }
 
   mouseMove(e) {
@@ -109,17 +107,46 @@ export default class Figure {
 
   mouseEnter() {
     gsap.to(this.mesh.material.uniforms.uState, {
-      duration: 0.5,
-      value: 1
+      duration: 1,
+      value: 1,
+      ease: 'power2.out'
     })
+    gsap.to(this.mesh.material.uniforms.uDistortion, {
+      duration: 1,
+      value: 1,
+      ease: 'power2.out'
+    })
+    gsap.to(this.mesh.material.uniforms.uDistortion, {
+      duration: 1,
+      delay: 0.5,
+      value: 0,
+      ease: 'power2.out'
+    })
+    // gsap.to(this.mesh.material.uniforms.uState, {
+    //   duration: 1,
+    //   delay: 0.5,
+    //   value: 0,
+    //   ease: 'power3.in'
+    // })
   }
 
   mouseLeave() {
-    this.mesh.material.uniforms.uMouse.value = {y: 0, x: 0}
-    this.mesh.material.uniforms.uVelo.value = 0
+    // this.mesh.material.uniforms.uMouse.value = {y: 0, x: 0}
+    // this.mesh.material.uniforms.uVelo.value = 0
     gsap.to(this.mesh.material.uniforms.uState, {
-      duration: 0.5,
+      duration: 1,
       value: 0
+    })
+    gsap.to(this.mesh.material.uniforms.uDistortion, {
+      duration: 1,
+      value: 1,
+      ease: 'power2.out'
+    })
+    gsap.to(this.mesh.material.uniforms.uDistortion, {
+      duration: 1,
+      delay: 0.5,
+      value: 0,
+      ease: 'power2.out'
     })
   }
 

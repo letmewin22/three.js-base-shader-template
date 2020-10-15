@@ -1,19 +1,21 @@
 varying vec2 vUv;
-uniform vec2 uMouse;
-uniform float uState;
 uniform float uTime;
-uniform vec2 uResolution;
+uniform float uState;
+uniform float uDistortion;
+
 
 void main() {
   vUv = uv;
-  vec2 pos;
-  pos.x = position.x * uResolution.x;
-  pos.y = position.y * uResolution.y;
+  vec3 pos = position;
 
-  lowp float vWave = sin(uTime / 8. + (pos.x + pos.y) * 0.5)*uState * 0.00625; // *5
+  vec2 dXY = vec2(pos.x + uDistortion, pos.y + uDistortion);
+  pos.z = sin(uState + uDistortion + (dXY.y + dXY.x) * 5.) * 0.08 * uDistortion;
+  
+  float distance = uState / 8.;
 
-  gl_Position = projectionMatrix * modelViewMatrix * 
-  vec4(position.x + uMouse.x * uState * 0.01, position.y + uMouse.y * uState * 0.01, vWave, 1.0 );
+  vec2 posXY = vec2(position.x, position.y);
+
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(posXY, pos.z + distance, 1.0);
 }
 
 
