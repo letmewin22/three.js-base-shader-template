@@ -9,11 +9,12 @@ void main()	{
 	float roundblend = sin(M_PI*uDistortion);
 	float stepblend = clamp( 2.*(-vUv.x + vUv.y) +3.*uDistortion - 1., 0.,1.);
 
-	vec4 tuxture = texture2D(uTexture, vUv);
-	vec4 multiplyTexture = texture2D(uTexture, vUv) * stepblend * roundblend * 0.15;
+	vec4 originTexture = texture2D(uTexture, vUv);
+	vec4 multiplyTexture = texture2D(uTexture, vUv) * stepblend * roundblend * 0.25;
 
-	tuxture.a = 1.;
+	originTexture.a = 1.;
 	multiplyTexture.a = 1.;
+	multiplyTexture.gr = originTexture.gb * roundblend * 0.05;
 
-	gl_FragColor = tuxture + multiplyTexture;
+	gl_FragColor = originTexture + multiplyTexture;
 }
