@@ -1,6 +1,5 @@
 import * as THREE from 'three'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
-import {watchViewport} from '@/libs/tornis'
 
 import Figure from './Figure'
 
@@ -50,9 +49,6 @@ export default class Scene {
       const figureIns = new Figure(this.scene, img)
       this.figures.push(figureIns)
     })
-
-    watchViewport(this.updateValues.bind(this))
-
   }
 
   setupCamera() {
@@ -88,6 +84,14 @@ export default class Scene {
     this.figures.forEach(figure => figure.resize())
   }
 
+  updatePos(pos) {
+    // this.scene.position.y = pos
+    this.figures.forEach(figure => {
+      figure.getSizes(pos)
+      figure.resize()
+    })
+  }
+
   animate() {
     this.animateRAF = () => {
       requestAnimationFrame(this.animateRAF)
@@ -95,15 +99,8 @@ export default class Scene {
       this.figures.forEach(figure => {
         figure.update()
       })
-      this.scene.position.y = window.pageYOffset
       this.renderer.render(this.scene, this.camera)
     }
     this.animateRAF()
-  }
-
-  updateValues({scroll}) {
-    if (scroll.changed) {
-      // console.log(scroll)
-    }
   }
 }

@@ -16,6 +16,10 @@ body {
   padding-top: 100px;
 }
 
+[data-scroll-content] {
+  padding-top: 100px;
+}
+
 .cols {
   display: grid;
   grid-template-columns: 0.5fr 1fr 0.5fr;

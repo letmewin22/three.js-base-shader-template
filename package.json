@@ -67,6 +67,8 @@
   "dependencies": {
     "@babel/polyfill": "^7.10.1",
     "gsap": "^3.3.4",
-    "three": "^0.119.1"
+    "imagesloaded": "^4.1.4",
+    "three": "^0.119.1",
+    "tiny-emitter": "^2.1.0"
   }
 }
