@@ -27,6 +27,7 @@ export default class Figure {
 
     this.loader = new THREE.TextureLoader()
     this.createMesh()
+
   }
 
   createMesh() {
@@ -108,20 +109,17 @@ export default class Figure {
   mouseEnter() {
     gsap.to(this.mesh.material.uniforms.uState, {
       duration: 1,
-      value: 1,
-      ease: 'power2.out'
+      value: 1
     })
     gsap.to(this.mesh.material.uniforms.uDistortion, {
-      duration: 1,
-      value: 1,
-      ease: 'power2.out'
+      duration: 1.5,
+      value: 1
     })
-    gsap.to(this.mesh.material.uniforms.uDistortion, {
-      duration: 1,
-      delay: 0.5,
-      value: 0,
-      ease: 'power2.out'
-    })
+    // gsap.to(this.mesh.material.uniforms.uDistortion, {
+    //   duration: 1,
+    //   delay: 0.5,
+    //   value: 0
+    // })
     // gsap.to(this.mesh.material.uniforms.uState, {
     //   duration: 1,
     //   delay: 0.5,
@@ -138,13 +136,7 @@ export default class Figure {
       value: 0
     })
     gsap.to(this.mesh.material.uniforms.uDistortion, {
-      duration: 1,
-      value: 1,
-      ease: 'power2.out'
-    })
-    gsap.to(this.mesh.material.uniforms.uDistortion, {
-      duration: 1,
-      delay: 0.5,
+      duration: 1.5,
       value: 0,
       ease: 'power2.out'
     })

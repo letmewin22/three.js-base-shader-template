@@ -95,6 +95,7 @@ export default class Scene {
       this.figures.forEach(figure => {
         figure.update()
       })
+      this.scene.position.y = window.pageYOffset
       this.renderer.render(this.scene, this.camera)
     }
     this.animateRAF()
@@ -102,11 +103,7 @@ export default class Scene {
 
   updateValues({scroll}) {
     if (scroll.changed) {
-      this.figures.forEach(figure => {
-        // figure.scroll({value: scroll.velocity.y})
-        // figure.updatePos(scroll.top)
-        figure.resize()
-      })
+      // console.log(scroll)
     }
   }
 }

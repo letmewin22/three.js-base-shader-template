@@ -60,3 +60,10 @@ body {
   z-index: 1000;
   pointer-events: none;
 }
+
+.text {
+  max-width: 300px;
+  position: absolute;
+  top: 400px;
+  right: 100px;
+}
