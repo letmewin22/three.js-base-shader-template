@@ -10,11 +10,10 @@ void main() {
   vec3 pos = position;
 
   float roundblend = sin(M_PI*uDistortion);
-	float stepblend = clamp((-pos.x + pos.y) +3.*uDistortion - 1., 0.,1.);
+	float stepblend = clamp(2.*(-pos.x + pos.y) +5.*uDistortion - 2., 0.,1.);
 
-  // pos.z = roundblend*0.05*sin(stepblend*10. + uTime/30.);
-  pos.z = 0.1 * stepblend + roundblend*0.05*sin((-pos.x + pos.y)*10. + uTime/5.);
-  
+  pos.z += 0.2*stepblend + roundblend*0.05*sin(2.*(-pos.x + pos.y) +3.*uDistortion - 1. + uTime/50.);
+
   float distance = uState / 22.*0.;
 
   vec2 posXY = vec2(position.x, position.y);
