@@ -10,12 +10,29 @@
       margin: 0px;
       box-sizing: border-box;
     }
+    body {
+      background: #F1F1F1;
+      overflow: hidden;
+
+    }
     canvas {
       display: block;
+      opacity: 0.8;
+    }
+    #gl {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+    img {
+      position: relative;
+      top: -5vh;
     }
   </style>
 </head>
 <body>
+  <img src="./first-screen.png" alt="">
   <div id="gl"></div>
   <script src="./js/app.js"></script>
 </body>
